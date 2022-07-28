@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文将描述在迁移程中和迁移后经常出现的问题，这样后面维护的同学就可以避免出现意外情况，此外，我还将讲述到如何在迁移后正确执行测试。这样下次官网的维护就可以给予学弟学妹充足的实践文档而无需我再次重构网站。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据迁徙保存方法实践">
+<meta property="og:url" content="http://example.com/2022/05/09/%E6%95%B0%E6%8D%AE%E8%BF%81%E5%BE%99%E4%BF%9D%E5%AD%98%E6%96%B9%E6%B3%95%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="信息工程学院物联网协会">
+<meta property="og:description" content="本文将描述在迁移程中和迁移后经常出现的问题，这样后面维护的同学就可以避免出现意外情况，此外，我还将讲述到如何在迁移后正确执行测试。这样下次官网的维护就可以给予学弟学妹充足的实践文档而无需我再次重构网站。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-09T08:45:49.000Z">
+<meta property="article:modified_time" content="2022-05-10T03:11:53.509Z">
+<meta property="article:author" content="信息工程学院物联网协会">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/05/09/%E6%95%B0%E6%8D%AE%E8%BF%81%E5%BE%99%E4%BF%9D%E5%AD%98%E6%96%B9%E6%B3%95%E5%AE%9E%E8%B7%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>数据迁徙保存方法实践 | 信息工程学院物联网协会</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">信息工程学院物联网协会</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/09/%E6%95%B0%E6%8D%AE%E8%BF%81%E5%BE%99%E4%BF%9D%E5%AD%98%E6%96%B9%E6%B3%95%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="信息工程学院物联网协会">
+      <meta itemprop="description" content="宝剑锋从磨砺出，梅花香自苦寒来。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="信息工程学院物联网协会">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据迁徙保存方法实践
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-09 16:45:49" itemprop="dateCreated datePublished" datetime="2022-05-09T16:45:49+08:00">2022-05-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-10 11:11:53" itemprop="dateModified" datetime="2022-05-10T11:11:53+08:00">2022-05-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BF%90%E7%BB%B4%E6%97%A5%E5%BF%97/" itemprop="url" rel="index"><span itemprop="name">运维日志</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文将描述在迁移程中和迁移后经常出现的问题，这样后面维护的同学就可以避免出现意外情况，此外，我还将讲述到如何在迁移后正确执行测试。这样下次官网的维护就可以给予学弟学妹充足的实践文档而无需我再次重构网站。</p>
+<span id="more"></span>
+<p>企业为什么要进行数据迁移？原因有很多，例如，更换服务器，将其内部的IT基础设施转移到云计算环境中，由于合并或收购，用新的数据更新当前的数据库，或者将数据迁移到新的CRM中。</p>
+<p>然而数据迁移却是一项非常复杂的工作，据统计，70%-90%的数据迁移项目都没有达到预期的效果。今天，我们将介绍数据迁移的10个最佳实践，你将了解到什么是数据迁移策略，数据迁移策略包括哪些内容，以及在规划迁移时需要注意什么。</p>
+<p>备份你的数据<br>有时事情并没有按照计划进行，所以在你开始将数据从一个系统迁移到另一个系统之前，确保你有一个数据备份，以避免任何潜在的数据丢失。如果出现问题，例如，你的文件损坏、丢失或不完整，你就可以将数据恢复到主要状态。</p>
+<p>验证数据的复杂性和质量<br>数据迁移的另一个最佳实践是验证数据的复杂性，以决定采取的最佳方法。检查和评估不同形式的组织数据，验证你要迁移的数据是什么数据，它在哪里，存储在哪里，如何存储，以及转移后采取的格式。</p>
+<p>检查你当前的数据有多干净，是否需要更新？值得进行一次数据质量评估，以检测遗留数据的质量，并实施防火墙，将好的数据与坏的数据分开，消除重复数据。</p>
+<p>界定数据标准<br>只要你知道数据有多复杂，你就必须要制定一些标准。为什么要这样做？为了让自己能够发现任何问题的地方，并确保你能够避免在项目的最后阶段出现意想不到的问题。此外，数据是流动的，它是不断变化的，因此，将标准落实到位将帮助你进行数据整合，从而确保未来的数据使用更加成功。</p>
+<p>指定未来和当前的业务规则<br>你必须保证合规性，这意味着为你的数据迁移过程定义当前和未来的业务规则。它们必须符合各种验证和业务规则，使你能够一致地传输数据，而这只能通过建立数据迁移策略来实现。</p>
+<p>在迁移之前，你可能需要为你的数据想出一套规则，然后在迁移过程结束后，再重新评估这些规则，并为你的数据增加复杂性。</p>
+<p>创建一个数据迁移策略<br>成功的数据迁移的下一步是就策略达成一致。你可以采取两种方法：”大爆炸式”<br>迁移或 “涓滴式”<br>迁移。</p>
+<p>如果你选择 “大爆炸式 “迁移，那么整个数据迁移会在特定的时间范围内完成，例如24小时内完成。在数据经过ETL处理并移到新的数据库中时，实时系统都会瘫痪。这样做比较快，但风险较高。</p>
+<p>“涓流式”迁移将数据迁移分成几个阶段，两个系统——新系统和旧系统同时运行。这意味着没有停机时间，虽然这种方法比较复杂，但也比较安全，因为数据是连续迁移的。</p>
+<p>数据迁移过程保持交流<br>数据迁移过程很可能需要多个团队的参与， 确保你向他们传达这个过程是一个重要的数据迁移最佳实践，他们必须知道对他们的期望是什么。这意味着你需要分配任务和责任，列出所有的任务和可交付成果，并为活动分配角色。验证你是否有合适的资源来完成每个任务。</p>
+<p>你必须考虑到：<br>谁对数据迁移过程有最终的决定权？</p>
+<p>谁有权力决定是否顺利完成</p>
+<p>迁移后由谁负责数据验证</p>
+<p>如果你未能实施明确的任务和责任分工，那么可能会导致组织混乱，延迟你的迁移过程，甚至导致失败。</p>
+<p>使用正确的工具<br>你能想象手动迁移脚本/数据吗？这不符合实际。在数据迁移过程中使用正确的工具会使过程更快、更有效。你可以使用这些工具进行数据分析、发现、数据质量验证和测试。</p>
+<p>考虑选择合适的迁移工具是你规划过程中的关键组成部分之一，你的选择应该基于组织的用例和业务需求。</p>
+<p>实施风险管理战略<br>风险管理是你在进行数据迁移过程中必须考虑的事情，有许多问题可能会发生，将它们列举出来，并想出解决这些问题的方法，或者在第一时间阻止它们的发生，将使整个过程更加成功。考虑到折旧的数据值、安全性、用户测试、应用依赖性等问题。</p>
+<p>以敏捷的心态来对待它<br>在数据迁移过程中使用敏捷将帮助你保持较高的数据质量，因为频繁的测试，可以在错误发生时及时发现并消除错误，整体上使过程更加透明。它还将使成本和进度更可预测，因为它需要明确的任务和责任分工，并坚持到最后期限。</p>
+<p>别忘了测试<br>等到数据传输完成后再进行测试，可能会让你付出巨大的代价。在每个阶段都要测试你的数据迁移：规划、设计、实施和维护，只有这样，你才能及时达到预期的结果。</p>
+<p>结论<br>数据迁移可能是一个复杂的过程，但这是你的公司在某些时候必须要经历的事情。如果事情不按计划进行，并且经常出现不按计划进行的情况，那么备份你的数据以避免丢失。这就是为什么有必要制定风险管理策略的原因——找出所有潜在的问题，并尝试提出解决方案来快速解决这些问题。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/09/%E7%89%A9%E5%8D%8F%E5%AE%98%E7%BD%91%E5%86%8D%E4%BC%98%E5%8C%96%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90/" rel="prev" title="物协官网再优化架构解析">
+      <i class="fa fa-chevron-left"></i> 物协官网再优化架构解析
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">信息工程学院物联网协会</p>
+  <div class="site-description" itemprop="description">宝剑锋从磨砺出，梅花香自苦寒来。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">信息工程学院物联网协会</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

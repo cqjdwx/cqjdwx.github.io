@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="主测界面代码如下，全研究代码请联系2019级邓松涛同学或陈睿航同学获取。两位同学分别负责并完善了该项目的软硬件贯通设计。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习部分代码开发实录">
+<meta property="og:url" content="http://example.com/2022/05/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91%E5%AE%9E%E5%BD%95/index.html">
+<meta property="og:site_name" content="信息工程学院物联网协会">
+<meta property="og:description" content="主测界面代码如下，全研究代码请联系2019级邓松涛同学或陈睿航同学获取。两位同学分别负责并完善了该项目的软硬件贯通设计。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-09T08:43:25.000Z">
+<meta property="article:modified_time" content="2022-05-10T03:02:23.897Z">
+<meta property="article:author" content="信息工程学院物联网协会">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/05/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91%E5%AE%9E%E5%BD%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>机器学习部分代码开发实录 | 信息工程学院物联网协会</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">信息工程学院物联网协会</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81%E5%BC%80%E5%8F%91%E5%AE%9E%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="信息工程学院物联网协会">
+      <meta itemprop="description" content="宝剑锋从磨砺出，梅花香自苦寒来。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="信息工程学院物联网协会">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习部分代码开发实录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-09 16:43:25" itemprop="dateCreated datePublished" datetime="2022-05-09T16:43:25+08:00">2022-05-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-10 11:02:23" itemprop="dateModified" datetime="2022-05-10T11:02:23+08:00">2022-05-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%80%E5%8F%91%E4%BB%A3%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">开发代码</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>主测界面代码如下，全研究代码请联系2019级邓松涛同学或陈睿航同学获取。两位同学分别负责并完善了该项目的软硬件贯通设计。</p>
+<span id="more"></span>
+<p>import argparse</p>
+<p>from utils.datasets import *<br>from utils.utils import *</p>
+<p>def detect(save_img=False):<br>    out, source, weights, view_img, save_txt, imgsz = <br>        opt.output, opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size<br>    webcam = source == ‘0’ or source.startswith(‘rtsp’) or source.startswith(‘http’) or source.endswith(‘.txt’)</p>
+<pre><code># Initialize
+device = torch_utils.select_device(opt.device)
+if os.path.exists(out):
+    shutil.rmtree(out)  # delete output folder
+os.makedirs(out)  # make new output folder
+half = device.type != &#39;cpu&#39;  # half precision only supported on CUDA
+
+# Load model
+google_utils.attempt_download(weights)
+model = torch.load(weights, map_location=device)[&#39;model&#39;].float()  # load to FP32
+# torch.save(torch.load(weights, map_location=device), weights)  # update model if SourceChangeWarning
+# model.fuse()
+model.to(device).eval()
+if half:
+    model.half()  # to FP16
+
+# Second-stage classifier
+classify = False
+if classify:
+    modelc = torch_utils.load_classifier(name=&#39;resnet101&#39;, n=2)  # initialize
+    modelc.load_state_dict(torch.load(&#39;weights/resnet101.pt&#39;, map_location=device)[&#39;model&#39;])  # load weights
+    modelc.to(device).eval()
+
+# Set Dataloader
+vid_path, vid_writer = None, None
+if webcam:
+    view_img = True
+    torch.backends.cudnn.benchmark = True  # set True to speed up constant image size inference
+    dataset = LoadStreams(source, img_size=imgsz)
+else:
+    save_img = True
+    dataset = LoadImages(source, img_size=imgsz)
+
+# Get names and colors
+names = model.names if hasattr(model, &#39;names&#39;) else model.modules.names
+colors = [[random.randint(0, 255) for _ in range(3)] for _ in range(len(names))]
+
+# Run inference
+t0 = time.time()
+img = torch.zeros((1, 3, imgsz, imgsz), device=device)  # init img
+_ = model(img.half() if half else img) if device.type != &#39;cpu&#39; else None  # run once
+for path, img, im0s, vid_cap in dataset:
+    img = torch.from_numpy(img).to(device)
+    img = img.half() if half else img.float()  # uint8 to fp16/32
+    img /= 255.0  # 0 - 255 to 0.0 - 1.0
+    if img.ndimension() == 3:
+        img = img.unsqueeze(0)
+
+    # Inference
+    t1 = torch_utils.time_synchronized()
+    pred = model(img, augment=opt.augment)[0]
+
+    # Apply NMS
+    pred = non_max_suppression(pred, opt.conf_thres, opt.iou_thres,
+                               fast=True, classes=opt.classes, agnostic=opt.agnostic_nms)
+    t2 = torch_utils.time_synchronized()
+
+    # Apply Classifier
+    if classify:
+        pred = apply_classifier(pred, modelc, img, im0s)
+
+    # List to store bounding coordinates of people
+    people_coords = []
+
+    # Process detections
+    for i, det in enumerate(pred):  # detections per image
+        if webcam:  # batch_size &gt;= 1
+            p, s, im0 = path[i], &#39;%g: &#39; % i, im0s[i].copy()
+        else:
+            p, s, im0 = path, &#39;&#39;, im0s
+
+        save_path = str(Path(out) / Path(p).name)
+        s += &#39;%gx%g &#39; % img.shape[2:]  # print string
+        gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  #  normalization gain whwh
+        if det is not None and len(det):
+            # Rescale boxes from img_size to im0 size
+            det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
+
+            # Print results
+            for c in det[:, -1].unique():
+                n = (det[:, -1] == c).sum()  # detections per class
+                s += &#39;%g %ss, &#39; % (n, names[int(c)])  # add to string
+
+            # Write results
+            for *xyxy, conf, cls in det:
+                if save_txt:  # Write to file
+                    xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
+                    with open(save_path[:save_path.rfind(&#39;.&#39;)] + &#39;.txt&#39;, &#39;a&#39;) as file:
+                        file.write((&#39;%g &#39; * 5 + &#39;\n&#39;) % (cls, *xywh))  # label format
+
+                if save_img or view_img:  # Add bbox to image
+                    label = &#39;%s %.2f&#39; % (names[int(cls)], conf)
+                    if label is not None:
+                        if (label.split())[0] == &#39;person&#39;:
+                            people_coords.append(xyxy)
+                            # plot_one_box(xyxy, im0, line_thickness=3)
+                            plot_dots_on_people(xyxy, im0)
+
+        # Plot lines connecting people
+        distancing(people_coords, im0, dist_thres_lim=(200,250))
+
+        # Print time (inference + NMS)
+        print(&#39;%sDone. (%.3fs)&#39; % (s, t2 - t1))
+
+        # Stream results
+        if view_img:
+            cv2.imshow(p, im0)
+            if cv2.waitKey(1) == ord(&#39;q&#39;):  # q to quit
+                raise StopIteration
+
+        # Save results (image with detections)
+        if save_img:
+            if dataset.mode == &#39;images&#39;:
+                cv2.imwrite(save_path, im0)
+            else:
+                if vid_path != save_path:  # new video
+                    vid_path = save_path
+                    if isinstance(vid_writer, cv2.VideoWriter):
+                        vid_writer.release()  # release previous video writer
+
+                    fps = vid_cap.get(cv2.CAP_PROP_FPS)
+                    w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                    vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*opt.fourcc), fps, (w, h))
+                vid_writer.write(im0)
+
+if save_txt or save_img:
+    print(&#39;Results saved to %s&#39; % os.getcwd() + os.sep + out)
+    if platform == &#39;darwin&#39;:  # MacOS
+        os.system(&#39;open &#39; + save_path)
+
+print(&#39;Done. (%.3fs)&#39; % (time.time() - t0))
+</code></pre>
+<p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    parser = argparse.ArgumentParser()<br>    parser.add_argument(‘–weights’, type=str, default=’weights/yolov5s.pt’, help=’model.pt path’)<br>    parser.add_argument(‘–source’, type=str, default=’inference/images’, help=’source’)  # file/folder, 0 for webcam<br>    parser.add_argument(‘–output’, type=str, default=’inference/output’, help=’output folder’)  # output folder<br>    parser.add_argument(‘–img-size’, type=int, default=640, help=’inference size (pixels)’)<br>    parser.add_argument(‘–conf-thres’, type=float, default=0.4, help=’object confidence threshold’)<br>    parser.add_argument(‘–iou-thres’, type=float, default=0.5, help=’IOU threshold for NMS’)<br>    parser.add_argument(‘–fourcc’, type=str, default=’mp4v’, help=’output video codec (verify ffmpeg support)’)<br>    parser.add_argument(‘–device’, default=’’, help=’cuda device, i.e. 0 or 0,1,2,3 or cpu’)<br>    parser.add_argument(‘–view-img’, action=’store_true’, help=’display results’)<br>    parser.add_argument(‘–save-txt’, action=’store_true’, help=’save results to *.txt’)<br>    parser.add_argument(‘–classes’, nargs=’+’, type=int, help=’filter by class’)<br>    parser.add_argument(‘–agnostic-nms’, action=’store_true’, help=’class-agnostic NMS’)<br>    parser.add_argument(‘–augment’, action=’store_true’, help=’augmented inference’)<br>    opt = parser.parse_args()<br>    opt.img_size = check_img_size(opt.img_size)<br>    print(opt)</p>
+<pre><code>with torch.no_grad():
+    detect()
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/09/%E7%AC%AC%E5%9B%9B%E6%AC%A1%E9%81%A5%E6%8E%A7%E5%B0%8F%E8%BD%A6%E7%A0%94%E5%8F%91%E8%AE%B0%E5%BD%95/" rel="prev" title="第四次遥控小车研发记录">
+      <i class="fa fa-chevron-left"></i> 第四次遥控小车研发记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/09/%E5%A4%9A%E9%9B%86%E6%88%90%E6%97%A0%E4%BA%BA%E6%9C%BA%E9%81%A5%E6%84%9F%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81/" rel="next" title="多集成无人机遥感系统概述">
+      多集成无人机遥感系统概述 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">信息工程学院物联网协会</p>
+  <div class="site-description" itemprop="description">宝剑锋从磨砺出，梅花香自苦寒来。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">信息工程学院物联网协会</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
